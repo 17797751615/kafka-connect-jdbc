@@ -16,6 +16,8 @@
 
 package io.confluent.connect.jdbc;
 
+import org.apache.kafka.common.config.ConfigDef;
+import org.apache.kafka.common.config.ConfigException;
 import org.apache.kafka.connect.connector.Task;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceConnector;
@@ -27,6 +29,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import io.confluent.common.config.ConfigException;
 import io.confluent.connect.jdbc.util.StringUtils;
 import io.confluent.connect.jdbc.util.Version;
 
@@ -145,5 +147,15 @@ public class JdbcSourceConnector extends SourceConnector {
     } catch (SQLException e) {
       log.error("Failed to close database connection: ", e);
     }
+  }
+
+  @Override
+  protected ConfigDef defineConfig() {
+    return configDef;
+  }
+
+  @Override
+  protected List<String> defineGroup() {
+    return Arrays.asList(JdbcSourceConnectorConfig.DATABASE_GROUP, JdbcSourceConnectorConfig.MODE_CONFIG, JdbcSourceConnectorConfig.CONNECTOR_GROUP);
   }
 }
